@@ -32,3 +32,27 @@ dependencies {
 
 test {
 useJUnitPlatform()}
+
+// Runs before the GlassFish run configuration so the default jdbc/__default (DerbyPool) datasource is reachable.
+tasks.register('startDatabase') {
+  description = 'Starts the GlassFish Java DB (Derby) server on port 1527 if it is not already running.'
+  def asadmin = findProperty('asadmin') ?: '/opt/homebrew/bin/asadmin'
+  onlyIf {
+    try {
+      new Socket('localhost', 1527).close()
+      false
+    } catch (IOException ignored) {
+      true
+    }
+  }
+  doLast {
+    // Output is discarded because the spawned Derby process inherits it and would keep Gradle waiting.
+    def process = new ProcessBuilder(asadmin, 'start-database', '--dbhost', 'localhost')
+        .redirectOutput(ProcessBuilder.Redirect.DISCARD)
+        .redirectError(ProcessBuilder.Redirect.DISCARD)
+        .start()
+    if (process.waitFor() != 0) {
+      throw new GradleException("asadmin start-database failed with exit code ${process.exitValue()}")
+    }
+  }
+}
