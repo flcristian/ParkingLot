@@ -20,6 +20,12 @@
                         <t:route url="/about.jsp" name="About"/>
                     </li>
                     <li class="nav-item">
+                        <t:route url="/Cars" name="Cars"/>
+                    </li>
+                    <li class="nav-item">
+                        <t:route url="/Users" name="Users"/>
+                    </li>
+                    <li class="nav-item">
                         <button class="nav-link" type="button" data-bs-toggle="menu" aria-expanded="false">
                             Menu
                         </button>
