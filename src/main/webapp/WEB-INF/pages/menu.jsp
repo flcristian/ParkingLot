@@ -1,4 +1,5 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <nav class="navbar md:navbar-expand bg-1">
     <div class="container-fluid">
@@ -20,10 +21,14 @@
                         <t:route url="/about.jsp" name="About"/>
                     </li>
                     <li class="nav-item">
-                        <t:route url="/Cars" name="Cars"/>
+                        <c:if test="${pageContext.request.isUserInRole('READ_CARS')}">
+                            <t:route url="/Cars" name="Cars"/>
+                        </c:if>
                     </li>
                     <li class="nav-item">
-                        <t:route url="/Users" name="Users"/>
+                        <c:if test="${pageContext.request.isUserInRole('READ_USERS')}">
+                            <t:route url="/Users" name="Users"/>
+                        </c:if>
                     </li>
                     <li class="nav-item">
                         <button class="nav-link" type="button" data-bs-toggle="menu" aria-expanded="false">
@@ -42,7 +47,14 @@
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <t:route url="/Login" name="Login"/>
+                        <c:choose>
+                            <c:when test="${pageContext.request.getRemoteUser() == null}">
+                                <t:route url="/Login" name="Login"/>
+                            </c:when>
+                            <c:otherwise>
+                                <t:route url="/Logout" name="Logout"/>
+                            </c:otherwise>
+                        </c:choose>
                     </li>
                 </ul>
             </div>
